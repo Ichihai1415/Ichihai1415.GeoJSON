@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Ichihai1415.GeoJSON
 {
-    public class Class
+    /// <summary>
+    /// 参照用クラスのクラス
+    /// </summary>
+    public class GeoJSONScheme
     {
 
         /// <summary>
-        /// 気象庁GISデータのGeoJSONの地図用クラス
+        /// 気象庁GISデータのGeoJSON変換データの地図用クラス
         /// </summary>
         public class GeoJSON_JMA_Map
         {
