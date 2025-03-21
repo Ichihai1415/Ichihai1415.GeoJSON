@@ -10,6 +10,11 @@ namespace Ichihai1415.GeoJSON
     public class GeoJSONHelper
     {
         /// <summary>
+        /// Geometry独自クラスへの読み込みに指定する必要がある最低限の<see cref="JsonSerializerOptions"/>
+        /// </summary>
+        public static readonly JsonSerializerOptions ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE = new() { Converters = { new OriginalGeometryConverter() } };
+
+        /// <summary>
         /// Geometry独自クラスへの読み込みに必要です。書き込みは未実装です。
         /// </summary>
         public class OriginalGeometryConverter : JsonConverter<OriginalGeometry?>

@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ichihai1415.GeoJSON\Ichihai1415.GeoJSON.csproj" />
+  </ItemGroup>
+
 </Project>
