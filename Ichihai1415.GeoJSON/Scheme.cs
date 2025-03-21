@@ -7,11 +7,11 @@ namespace Ichihai1415.GeoJSON
     /// </summary>
     public class GeoJSONScheme
     {
-
         /// <summary>
-        /// 気象庁GISデータのGeoJSON変換データの地図用クラス
+        /// GeoJSONの格納クラスの基本クラス
         /// </summary>
-        public class GeoJSON_JMA_Map
+        /// <remarks>type:FeatureCollectionを前提としています。GeometryCollectionの場合<see cref="GeoJSON_Base_OnlyGeometry"/>を参照してください。</remarks>
+        public class GeoJSON_Base
         {
             /// <summary>
             /// 常にFeatureCollection
@@ -39,34 +39,56 @@ namespace Ichihai1415.GeoJSON
                 /// <summary>
                 /// 地物(nullの可能性あり)
                 /// </summary>
-                /// <remarks>自作クラス(<see cref="OriginalGeometry"/>?)に格納します。nullの場合のfeature例: <c>{"type":"Feature","geometry":null,"properties":{"code":"","name":"鷹島(甑島南方)","namekana":""}}</c></remarks>
+                /// <remarks>自作クラス(<see cref="OriginalGeometry"/>?)に格納します。</remarks>
+                //nullの場合のfeature例: {"type":"Feature","geometry":null,"properties":{"code":"","name":"鷹島(甑島南方)","namekana":""}}
                 [JsonPropertyName("geometry")]
                 public OriginalGeometry? Geometry { get; set; }
 
+                /// <summary>
+                /// 地物のプロパティ
+                /// </summary>
                 [JsonPropertyName("properties")]
-                public required C_Properties Properties { get; set; }
+                public C_Properties? Properties { get; set; }
             }
-            /*//旧クラス
-            public class C_Geometry
-            {
-                /// <summary>
-                /// Polygon/MultiPolygon
-                /// </summary>
-                [JsonPropertyName("type")]
-                public required string Type { get; set; }
 
-                /// <summary>
-                /// 座標の配列
-                /// </summary>
-                /// <remarks><c>"type":"Polygon"</c>の場合、<c>double</c>(<c>double[外側(,内側)][点配列][(経度,緯度)配列]</c>)、<c>"type":"MultiPolygon"</c>の場合、<c>double[]</c>(<c>double[ポリゴン配列][外側(,内側)][点配列][(経度,緯度)配列]</c>)</remarks>
-                [JsonPropertyName("coordinates")]
-                public required OriginalGeometry Coordinates { get; set; }
-            }
-            */
             /// <summary>
             /// 地物の詳細
             /// </summary>
             public class C_Properties
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// GeoJSONの格納クラスの基本クラス
+        /// </summary>
+        /// <remarks>type:GeometryCollectionを前提としています。FeatureCollectionの場合<see cref="GeoJSON_Base"/>を参照してください。</remarks>
+        public class GeoJSON_Base_OnlyGeometry
+        {
+            /// <summary>
+            /// 常にGeometryCollection
+            /// </summary>
+            [JsonPropertyName("type")]
+            public required string Type { get; set; }
+
+            /// <summary>
+            /// 地物の配列
+            /// </summary>
+            [JsonPropertyName("geometries")]
+            public required OriginalGeometry?[] Geometries { get; set; }
+        }
+
+        /// <summary>
+        /// 気象庁GISデータのGeoJSON変換データの地図用クラス
+        /// </summary>
+        /// <remarks>FeatureCollectionを前提としています。</remarks>
+        public class GeoJSON_JMA_Map : GeoJSON_Base
+        {
+            /// <summary>
+            /// 地物の詳細
+            /// </summary>
+            public new class C_Properties// : GeoJSON_Base.C_Properties//?
             {
                 /// <summary>
                 /// 気象庁コード
@@ -144,12 +166,12 @@ namespace Ichihai1415.GeoJSON
                 /// 緯度(y座標)
                 /// </summary>
                 public required float Lat { get; set; }
-
+                /*
                 /// <summary>
                 /// 標高(y座標)
                 /// </summary>
                 /// <remarks>必須ではない</remarks>
-                //public float? height { get; set; }//軽量化のためOFF
+                public float? height { get; set; }//軽量化のためOFF*/
             }
         }
 
