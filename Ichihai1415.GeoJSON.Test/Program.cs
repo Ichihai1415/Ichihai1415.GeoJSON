@@ -25,6 +25,10 @@ namespace Ichihai1415.GeoJSON.Test
             var json2_2 = JsonSerializer.Deserialize<GeoJSONScheme.GeoJSON_JMA_Map>(File.ReadAllText(@"D:\Ichihai1415\data\map\JMA\geojson\AreaTsunami_GIS_20240520_1.geojson"), GeoJSONHelper.ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE);
             Console.WriteLine("2_2   ok  time:" + (DateTime.Now - dt2_2).TotalMilliseconds + "ms");
 
+            var dt3 = DateTime.Now;
+            var json3 = JsonSerializer.Deserialize<GeoJSONScheme.GeoJSON_JMA_FaultDL>(File.ReadAllText(@"D:\Ichihai1415\data\jma\webapi\faultDL.geojson"), GeoJSONHelper.ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE);
+            Console.WriteLine("3     ok  time:" + (DateTime.Now - dt3).TotalMilliseconds + "ms");
+
             var name = json1.Features[2].Properties.Name;
             Console.WriteLine(name);
             Console.WriteLine("\n\nend");
