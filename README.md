@@ -42,12 +42,18 @@ var geojson = JsonSerializer.Deserialize<GeoJSONScheme.GeoJSON_Base>(geojsonStri
 public static readonly JsonSerializerOptions ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE = new() { Converters = { new OriginalGeometryConverter() } };
 ```
 
+### About samples of inheriting
+
+The samples is for Japan, so it is written here in Japanese.
+
+- `GeoJSON_JMA_Map`: 気象庁GSIデータ。地図・津波予報区も含め利用可能。
+- `GeoJSON_JMA_FaultDL`: 気象庁断層データ([震央分布での内部データ](https://www.jma.go.jp/bosai/hypo/const/faultDL.geojson))
 
 ## Ichihai1415.GeoJSON.Test
 
 debug/test for library. If you want to use this, you must change the path.
 
-output example:
+output example(v1.0.0):
 
 ```
 1     ok  time:24.3561ms
@@ -61,6 +67,13 @@ output example:
 If you find a bug or see an improvement, please create an Issue or Pull Request, or contact me ([X @ProjectS31415_1](https://x.com/ProjectS31415_1)).
 
 ## Versions
+
+### v1.0.1
+
+2025/06/01
+
+- Fix: A problem where property contents could not be accessed when inherited. Fixed the inheritance process, so if you used inheritance in a previous version, you need to fix it.
+- Add: Inheriting sample "GeoJSON_JMA_FaultDL". See `About samples of inheriting` above for details.
 
 ### v1.0.0
 
