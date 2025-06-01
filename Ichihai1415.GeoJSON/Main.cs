@@ -114,11 +114,11 @@ namespace Ichihai1415.GeoJSON
                     Type = type,
                     Coordinates = new OriginalGeometry.OriginalCoordinates
                     {
-                        Objects = polygonsPointsList.Select(p => new OriginalGeometry.OriginalCoordinates.SingleObject
+                        Objects = [.. polygonsPointsList.Select(p => new OriginalGeometry.OriginalCoordinates.SingleObject
                         {
                             MainPoints = p[0],
                             HolePoints = p.Count == 2 ? p[1] : null
-                        }).ToArray()
+                        })]
                     }
                 };
             }

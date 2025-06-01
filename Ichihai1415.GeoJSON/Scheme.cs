@@ -8,10 +8,24 @@ namespace Ichihai1415.GeoJSON
     public class GeoJSONScheme
     {
         /// <summary>
-        /// GeoJSONの格納クラスの基本クラス
+        /// GeoJSONの格納クラスの基本クラス(通常使用用)
         /// </summary>
         /// <remarks>type:FeatureCollectionを前提としています。GeometryCollectionの場合<see cref="GeoJSON_Base_OnlyGeometry"/>を参照してください。</remarks>
-        public class GeoJSON_Base
+        public class GeoJSON_Base : GeoJSON_Base<GeoJSON_Base.C_Properties_Empty>
+        {
+            /// <summary>
+            /// 空の地物の詳細クラス(不要な場合これを使用)
+            /// </summary>
+            public class C_Properties_Empty
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// GeoJSONの格納クラスの基本クラス(継承用)
+        /// </summary>
+        public class GeoJSON_Base<TFeaturesProperties>
         {
             /// <summary>
             /// 常にFeatureCollection
@@ -23,12 +37,12 @@ namespace Ichihai1415.GeoJSON
             /// 地理要素の配列
             /// </summary>
             [JsonPropertyName("features")]
-            public required C_Feature[] Features { get; set; }
+            public virtual required C_Feature<TFeaturesProperties>[] Features { get; set; }
 
             /// <summary>
             /// 地理要素
             /// </summary>
-            public class C_Feature
+            public class C_Feature<TProperties>
             {
                 /// <summary>
                 /// 常にFeature
@@ -48,11 +62,12 @@ namespace Ichihai1415.GeoJSON
                 /// 地物のプロパティ
                 /// </summary>
                 [JsonPropertyName("properties")]
-                public C_Properties? Properties { get; set; }
+                public TProperties? Properties { get; set; }
+
             }
 
             /// <summary>
-            /// 地物の詳細
+            /// 空の地物の詳細クラス(不要な場合これを使用)
             /// </summary>
             public class C_Properties
             {
@@ -63,7 +78,7 @@ namespace Ichihai1415.GeoJSON
         /// <summary>
         /// GeoJSONの格納クラスの基本クラス
         /// </summary>
-        /// <remarks>type:GeometryCollectionを前提としています。FeatureCollectionの場合<see cref="GeoJSON_Base"/>を参照してください。</remarks>
+        /// <remarks>type:GeometryCollectionを前提としています。FeatureCollectionの場合<see cref="GeoJSON_Base{TFeatures}"/>を参照してください。</remarks>
         public class GeoJSON_Base_OnlyGeometry
         {
             /// <summary>
@@ -83,12 +98,16 @@ namespace Ichihai1415.GeoJSON
         /// 気象庁GISデータのGeoJSON変換データの地図用クラス
         /// </summary>
         /// <remarks>FeatureCollectionを前提としています。</remarks>
-        public class GeoJSON_JMA_Map : GeoJSON_Base
+        public class GeoJSON_JMA_Map : GeoJSON_Base<GeoJSON_JMA_Map.C_Properties_JMA_Map>
         {
+            /// <inheritdoc/>
+            [JsonPropertyName("features")]
+            public override required C_Feature<C_Properties_JMA_Map>[] Features { get; set; }
+
             /// <summary>
             /// 地物の詳細
             /// </summary>
-            public new class C_Properties// : GeoJSON_Base.C_Properties//?
+            public class C_Properties_JMA_Map
             {
                 /// <summary>
                 /// 気象庁コード
