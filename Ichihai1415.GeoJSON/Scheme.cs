@@ -8,10 +8,10 @@ namespace Ichihai1415.GeoJSON
     public class GeoJSONScheme
     {
         /// <summary>
-        /// GeoJSONの格納クラスの基本クラス(通常使用用)
+        /// GeoJSONの格納クラスの基本クラス(通常使用用、継承する場合<see cref="GeoJSON_Base{TFeatures}"/>)
         /// </summary>
         /// <remarks>type:FeatureCollectionを前提としています。GeometryCollectionの場合<see cref="GeoJSON_Base_OnlyGeometry"/>を参照してください。</remarks>
-        public class GeoJSON_Base : GeoJSON_Base<GeoJSON_Base.C_Properties_Empty>
+        public sealed class GeoJSON_Base : GeoJSON_Base<GeoJSON_Base.C_Properties_Empty>
         {
             /// <summary>
             /// 空の地物の詳細クラス(不要な場合これを使用)
@@ -25,6 +25,7 @@ namespace Ichihai1415.GeoJSON
         /// <summary>
         /// GeoJSONの格納クラスの基本クラス(継承用)
         /// </summary>
+        /// <typeparam name="TFeaturesProperties">自作の地物の詳細クラス</typeparam>
         public class GeoJSON_Base<TFeaturesProperties>
         {
             /// <summary>
@@ -42,6 +43,7 @@ namespace Ichihai1415.GeoJSON
             /// <summary>
             /// 地理要素
             /// </summary>
+            /// <typeparam name="TProperties">自作の地物の詳細クラス</typeparam>
             public class C_Feature<TProperties>
             {
                 /// <summary>
@@ -63,16 +65,12 @@ namespace Ichihai1415.GeoJSON
                 /// </summary>
                 [JsonPropertyName("properties")]
                 public TProperties? Properties { get; set; }
-
             }
 
             /// <summary>
             /// 空の地物の詳細クラス(不要な場合これを使用)
             /// </summary>
-            public class C_Properties
-            {
-
-            }
+            public class C_Properties { }
         }
 
         /// <summary>
@@ -105,7 +103,7 @@ namespace Ichihai1415.GeoJSON
             public override required C_Feature<C_Properties_JMA_Map>[] Features { get; set; }
 
             /// <summary>
-            /// 地物の詳細
+            /// 地物の詳細(気象庁GISデータ)
             /// </summary>
             public class C_Properties_JMA_Map
             {
@@ -191,6 +189,61 @@ namespace Ichihai1415.GeoJSON
                 /// </summary>
                 /// <remarks>必須ではない</remarks>
                 public float? height { get; set; }//軽量化のためOFF*/
+            }
+        }
+
+        /// <summary>
+        /// 気象庁GISデータのGeoJSON変換データの地図用クラス
+        /// </summary>
+        /// <remarks>FeatureCollectionを前提としています。</remarks>
+        public class GeoJSON_JMA_FaultDL : GeoJSON_Base<GeoJSON_JMA_FaultDL.C_Properties_JMA_FaultDL>
+        {
+            /// <summary>
+            /// 地物の詳細(気象庁断層データ)
+            /// </summary>
+            public class C_Properties_JMA_FaultDL
+            {
+                /// <summary>
+                /// 断層ID
+                /// </summary>
+                /// <remarks>例: 0110101、1050101、3720101</remarks>
+                [JsonPropertyName("id")]
+                public required string Id { get; set; }
+
+                /// <summary>
+                /// 断層名
+                /// </summary>
+                /// <remarks>例: 濃尾断層帯、中央構造線断層帯、対馬海盆南方の南1断層、ゲンタツ瀬・大グリ南東縁断層帯</remarks>
+                [JsonPropertyName("name")]
+                public required string Name { get; set; }
+
+                /// <summary>
+                /// 断層詳細1
+                /// </summary>
+                /// <remarks>例: 主部、浦底-柳ヶ瀬山断層帯、三峠断層、-</remarks>
+                [JsonPropertyName("name1")]
+                public required string Name1 { get; set; }
+
+                /// <summary>
+                /// 断層名詳細2(1がなくて2があることあり)
+                /// </summary>
+                /// <remarks>例: 梅原断層帯、北部、六甲山地南縁-淡路島東岸、秋穂沖断層区間、-</remarks>
+                [JsonPropertyName("active")]
+                public required string Active { get; set; }
+
+                /// <summary>
+                /// 予想される規模
+                /// </summary>
+                /// <remarks>例: M7.4程度、M7.3程度以上、M7.0-7.5程度、最大M7.6程度、M6.9程度もしくはそれ以上、M7.3程度(中南部として)、M6.8程度(海域の短い活断層)、M6.8程度(簡便な評価)、（分岐断層）、[北部区間M7.2程度、南部区間M7.0程度以上]←[]内で1つ、-</remarks>
+                [JsonPropertyName("size")]
+                public required string Size { get; set; }
+
+                /// <summary>
+                /// 発生確率ランク
+                /// </summary>
+                /// <remarks>例: Zランク、S*ランク、中南部としてA*ランク、[Zランク(ケース1)、S*ランク(ケース2)]←[]内で1つ、単独で震源断層となることはないと推定、-</remarks>
+                [JsonPropertyName("rank")]
+                public required string Rank { get; set; }
             }
         }
 
