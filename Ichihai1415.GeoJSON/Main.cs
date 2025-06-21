@@ -131,6 +131,13 @@ namespace Ichihai1415.GeoJSON
             }
         }
 
-
+        /// <summary>
+        /// <see cref="JsonSerializerOptions"/>に<see cref="ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE"/>を自動的に指定してJSONをデシリアライズします。
+        /// </summary>
+        /// <typeparam name="TValue">デシリアライズする型。</typeparam>
+        /// <param name="json">JSON文字列</param>
+        /// <param name="options">JSONシリアライズのオプション(設定するなら<see cref="JsonSerializer.Deserialize{T}(string, JsonSerializerOptions?)"/>でいい)</param>
+        /// <returns><typeparamref name="TValue"/>にデシリアライズされたJSON</returns>
+        public static TValue? Deserialize<TValue>(string json, JsonSerializerOptions? options = null) => JsonSerializer.Deserialize<TValue>(json, options ?? ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE);
     }
 }

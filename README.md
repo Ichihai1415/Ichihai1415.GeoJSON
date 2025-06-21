@@ -26,10 +26,9 @@ This library is provided only in `.NET9`.
 
 ```csharp
 using Ichihai1415.GeoJSON;
-using System.Text.Json;
 
 var geojsonString = "";//enter geojson string here
-var geojson = JsonSerializer.Deserialize<GeoJSONScheme.GeoJSON_Base>(geojsonString, GeoJSONHelper.ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE);
+var geojson = GeoJSONHelper.Deserialize<GeoJSONScheme.GeoJSON_Base>(geojsonString);
 ```
 
 - `GeoJSONScheme.GeoJSON_Base`: The base class of GeoJSON. If `"Type": "GeometryCollection"`, use `GeoJSON_Base_OnlyGeometry` instead.
@@ -44,29 +43,28 @@ public static readonly JsonSerializerOptions ORIGINAL_GEOMETRY_SERIALIZER_OPTION
 
 ### About samples of inheriting
 
-The samples is for Japan, so it is written here in Japanese.
+The samples is for Japan, so it is written here in Japanese. If garbled characters are occurring, please look at GitHub, etc.
 
-- `GeoJSON_JMA_Map`: 気象庁GSIデータ。地図・津波予報区も含め利用可能。
+- `GeoJSON_JMA_Map`: 気象庁GISデータ。地図・津波予報区も含め利用可能。
 - `GeoJSON_JMA_FaultDL`: 気象庁断層データ([震央分布での内部データ](https://www.jma.go.jp/bosai/hypo/const/faultDL.geojson))
 
 ## Ichihai1415.GeoJSON.Test
 
 debug/test for library. If you want to use this, you must change the path.
 
-output example(v1.0.0):
-
-```
-1     ok  time:24.3561ms
-1_2   ok  time:179.6224ms
-2     ok  time:10.5185ms
-2_2   ok  time:125.8494ms
-```
-
 ## Contribution
 
 If you find a bug or see an improvement, please create an Issue or Pull Request, or contact me ([X @ProjectS31415_1](https://x.com/ProjectS31415_1)).
 
 ## Versions
+
+### v1.0.2
+
+2025/06/21
+
+- Fix: Some typos.
+- Fix: A problem where occurs exception when loading some JMA GIS data. Changed property of `GeoJSON_JMA_Map.C_Properties_JMA_Map` from `required` to `null`.
+- Add: `GeoJSONHelper.Desirialize`. You can omit the `option` specification in `JsonSerializer.Deserialize` (`GeoJSONHelper.ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE` will be set automatically).
 
 ### v1.0.1
 

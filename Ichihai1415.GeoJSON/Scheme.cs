@@ -8,7 +8,7 @@ namespace Ichihai1415.GeoJSON
     public class GeoJSONScheme
     {
         /// <summary>
-        /// GeoJSONの格納クラスの基本クラス(通常使用用、継承する場合<see cref="GeoJSON_Base{TFeatures}"/>)
+        /// GeoJSONの格納クラスの基本クラス(通常使用用、継承する場合<see cref="GeoJSON_Base{TFeaturesProperties}"/>)
         /// </summary>
         /// <remarks>type:FeatureCollectionを前提としています。GeometryCollectionの場合<see cref="GeoJSON_Base_OnlyGeometry"/>を参照してください。</remarks>
         public sealed class GeoJSON_Base : GeoJSON_Base<GeoJSON_Base.C_Properties_Empty>
@@ -76,7 +76,7 @@ namespace Ichihai1415.GeoJSON
         /// <summary>
         /// GeoJSONの格納クラスの基本クラス
         /// </summary>
-        /// <remarks>type:GeometryCollectionを前提としています。FeatureCollectionの場合<see cref="GeoJSON_Base{TFeatures}"/>を参照してください。</remarks>
+        /// <remarks>type:GeometryCollectionを前提としています。FeatureCollectionの場合<see cref="GeoJSON_Base{TFeaturesProperties}"/>を参照してください。</remarks>
         public class GeoJSON_Base_OnlyGeometry
         {
             /// <summary>
@@ -111,19 +111,19 @@ namespace Ichihai1415.GeoJSON
                 /// 気象庁コード
                 /// </summary>
                 [JsonPropertyName("code")]
-                public required string Code { get; set; }
+                public string? Code { get; set; }
 
                 /// <summary>
                 /// 名称
                 /// </summary>
                 [JsonPropertyName("name")]
-                public required string Name { get; set; }
+                public string? Name { get; set; }
 
                 /// <summary>
                 /// 名称(かな)
                 /// </summary>
                 [JsonPropertyName("namekana")]
-                public required string Namekana { get; set; }
+                public string? Namekana { get; set; }
             }
         }
 
@@ -183,12 +183,13 @@ namespace Ichihai1415.GeoJSON
                 /// 緯度(y座標)
                 /// </summary>
                 public required float Lat { get; set; }
-                /*
+
+                /*//おそらくtype=Pointのときしか使わないのでコメントアウト
                 /// <summary>
-                /// 標高(y座標)
+                /// 標高(z座標)
                 /// </summary>
                 /// <remarks>必須ではない</remarks>
-                public float? height { get; set; }//軽量化のためOFF*/
+                public float? Height { get; set; }*/
             }
         }
 
@@ -246,6 +247,5 @@ namespace Ichihai1415.GeoJSON
                 public required string Rank { get; set; }
             }
         }
-
     }
 }
