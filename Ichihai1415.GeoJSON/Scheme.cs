@@ -8,7 +8,7 @@ namespace Ichihai1415.GeoJSON
     public class GeoJSONScheme
     {
         /// <summary>
-        /// GeoJSONの格納クラスの基本クラス(通常使用用、継承する場合<see cref="GeoJSON_Base{TFeatures}"/>)
+        /// GeoJSONの格納クラスの基本クラス(通常使用用、継承する場合<see cref="GeoJSON_Base{TFeaturesProperties}"/>)
         /// </summary>
         /// <remarks>type:FeatureCollectionを前提としています。GeometryCollectionの場合<see cref="GeoJSON_Base_OnlyGeometry"/>を参照してください。</remarks>
         public sealed class GeoJSON_Base : GeoJSON_Base<GeoJSON_Base.C_Properties_Empty>
@@ -76,7 +76,7 @@ namespace Ichihai1415.GeoJSON
         /// <summary>
         /// GeoJSONの格納クラスの基本クラス
         /// </summary>
-        /// <remarks>type:GeometryCollectionを前提としています。FeatureCollectionの場合<see cref="GeoJSON_Base{TFeatures}"/>を参照してください。</remarks>
+        /// <remarks>type:GeometryCollectionを前提としています。FeatureCollectionの場合<see cref="GeoJSON_Base{TFeaturesProperties}"/>を参照してください。</remarks>
         public class GeoJSON_Base_OnlyGeometry
         {
             /// <summary>

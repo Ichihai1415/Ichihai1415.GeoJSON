@@ -46,7 +46,7 @@ public static readonly JsonSerializerOptions ORIGINAL_GEOMETRY_SERIALIZER_OPTION
 
 The samples is for Japan, so it is written here in Japanese.
 
-- `GeoJSON_JMA_Map`: 気象庁GSIデータ。地図・津波予報区も含め利用可能。
+- `GeoJSON_JMA_Map`: 気象庁GISデータ。地図・津波予報区も含め利用可能。
 - `GeoJSON_JMA_FaultDL`: 気象庁断層データ([震央分布での内部データ](https://www.jma.go.jp/bosai/hypo/const/faultDL.geojson))
 
 ## Ichihai1415.GeoJSON.Test
