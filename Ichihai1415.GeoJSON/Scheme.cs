@@ -111,19 +111,19 @@ namespace Ichihai1415.GeoJSON
                 /// 気象庁コード
                 /// </summary>
                 [JsonPropertyName("code")]
-                public required string Code { get; set; }
+                public string? Code { get; set; }
 
                 /// <summary>
                 /// 名称
                 /// </summary>
                 [JsonPropertyName("name")]
-                public required string Name { get; set; }
+                public string? Name { get; set; }
 
                 /// <summary>
                 /// 名称(かな)
                 /// </summary>
                 [JsonPropertyName("namekana")]
-                public required string Namekana { get; set; }
+                public string? Namekana { get; set; }
             }
         }
 
@@ -183,12 +183,13 @@ namespace Ichihai1415.GeoJSON
                 /// 緯度(y座標)
                 /// </summary>
                 public required float Lat { get; set; }
-                /*
+
+                /*//おそらくtype=Pointのときしか使わないのでコメントアウト
                 /// <summary>
-                /// 標高(y座標)
+                /// 標高(z座標)
                 /// </summary>
                 /// <remarks>必須ではない</remarks>
-                public float? height { get; set; }//軽量化のためOFF*/
+                public float? Height { get; set; }*/
             }
         }
 
@@ -246,6 +247,5 @@ namespace Ichihai1415.GeoJSON
                 public required string Rank { get; set; }
             }
         }
-
     }
 }

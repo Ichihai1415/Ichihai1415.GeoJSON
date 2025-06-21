@@ -1,51 +1,54 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <ApplicationIcon>new_lib.ico</ApplicationIcon>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>$(AssemblyName)</Title>
-    <Version>1.0.1</Version>
-    <Authors>Ichihai1415</Authors>
-    <Description>GeoJSON read support library for map drawing, etc.</Description>
-    <Copyright>© 2025 Ichihai1415</Copyright>
-    <PackageIcon>new_lib.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/Ichihai1415/Ichihai1415.GeoJSON</RepositoryUrl>
-    <PackageTags>GeoJSON,map</PackageTags>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<ApplicationIcon>new_lib.ico</ApplicationIcon>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>$(AssemblyName)</Title>
+		<Version>1.0.2</Version>
+		<Authors>Ichihai1415</Authors>
+		<Description>GeoJSON read support library for map drawing, etc.</Description>
+		<Copyright>© 2025 Ichihai1415</Copyright>
+		<PackageIcon>new_lib.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Ichihai1415/Ichihai1415.GeoJSON</RepositoryUrl>
+		<PackageTags>GeoJSON,map</PackageTags>
+		<AssemblyVersion>$(Version)</AssemblyVersion>
+		<FileVersion>$(Version)</FileVersion>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<PackageReleaseNotes>- Fix: Some typos.
+- Fix: A problem where occurs exception when loading some JMA GIS data. Changed property of `GeoJSON_JMA_Map.C_Properties_JMA_Map` from `required` to `null`.
+- Add: `GeoJSONHelper.Desirialize`. You can omit the `option` specification in `JsonSerializer.Deserialize` (`GeoJSONHelper.ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE` will be set automatically).</PackageReleaseNotes>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="new_lib.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="new_lib.ico" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="D:\Ichihai1415\image\icon\new_lib.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="D:\Ichihai1415\image\icon\new_lib.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>
