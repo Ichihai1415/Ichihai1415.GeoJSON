@@ -108,22 +108,45 @@ namespace Ichihai1415.GeoJSON
             public class C_Properties_JMA_Map
             {
                 /// <summary>
-                /// 気象庁コード
+                /// コードを取得します。
                 /// </summary>
+                /// <returns><see cref="Code"/>または<see cref="Regioncode"/></returns>
+                public string? GetCode() => Code ?? Regioncode;
+
+                /// <summary>
+                /// コード
+                /// </summary>
+                /// <remarks>[取得する際は<see cref="GetCode()"/>を推奨] 出現: AreaForecast,AreaForecastEEW,AreaForecastLocalE,AreaForecastLocalEEW,AreaForecastLocalM系,AreaMarineAJ,AreaTsunami　<see cref="Regioncode"/>が出現する場合は存在しない。</remarks>
                 [JsonPropertyName("code")]
                 public string? Code { get; set; }
 
                 /// <summary>
                 /// 名称
                 /// </summary>
+                /// <remarks>出現: AreaForecast,AreaForecastEEW,AreaForecastLocalE,AreaForecastLocalEEW,AreaForecastLocalM系,AreaInformationCity系,AreaMarineAJ,AreaTsunami (すべて)</remarks>
                 [JsonPropertyName("name")]
                 public string? Name { get; set; }
 
                 /// <summary>
                 /// 名称(かな)
                 /// </summary>
+                /// <remarks>出現: AreaForecastEEW,AreaForecastLocalEEW,AreaForecastLocalE,AreaForecastLocalEEW,AreaInformationCity系,AreaMarineAJ,AreaTsunami</remarks>
                 [JsonPropertyName("namekana")]
                 public string? Namekana { get; set; }
+
+                /// <summary>
+                /// コード
+                /// </summary>
+                /// <remarks>[取得する際は<see cref="GetCode()"/>を推奨] 出現: AreaInformationCity系</remarks>
+                [JsonPropertyName("regioncode")]
+                public string? Regioncode { get; set; }
+
+                /// <summary>
+                /// 名称
+                /// </summary>
+                /// <remarks>出現: AreaInformationCity系　例:北海道札幌市 北海道札幌市のうち中央区</remarks>
+                [JsonPropertyName("regionname")]
+                public string? Regionname { get; set; }
             }
         }
 

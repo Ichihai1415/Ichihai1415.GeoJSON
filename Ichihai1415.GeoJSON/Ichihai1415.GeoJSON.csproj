@@ -8,7 +8,7 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>$(AssemblyName)</Title>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<Authors>Ichihai1415</Authors>
 		<Description>GeoJSON read support library for map drawing, etc.</Description>
 		<Copyright>© 2025 Ichihai1415</Copyright>
@@ -19,9 +19,7 @@
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<PackageReleaseNotes>- Fix: Some typos.
-- Fix: A problem where occurs exception when loading some JMA GIS data. Changed property of `GeoJSON_JMA_Map.C_Properties_JMA_Map` from `required` to `null`.
-- Add: `GeoJSONHelper.Desirialize`. You can omit the `option` specification in `JsonSerializer.Deserialize` (`GeoJSONHelper.ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE` will be set automatically).</PackageReleaseNotes>
+		<PackageReleaseNotes>- Add: Some properties in `GeoJSON_JMA_Map.C_Properties_JMA_Map`.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
