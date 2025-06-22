@@ -24,6 +24,8 @@ This library is provided only in `.NET9`.
 
 ## How to use
 
+### GeoJSON loading
+
 ```csharp
 using Ichihai1415.GeoJSON;
 
@@ -41,12 +43,14 @@ var geojson = GeoJSONHelper.Deserialize<GeoJSONScheme.GeoJSON_Base>(geojsonStrin
 public static readonly JsonSerializerOptions ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE = new() { Converters = { new OriginalGeometryConverter() } };
 ```
 
-### About samples of inheriting
+### Inheriting samples
 
 The samples is for Japan, so it is written here in Japanese. If garbled characters are occurring, please look at GitHub, etc.
 
 - `GeoJSON_JMA_Map`: 気象庁GISデータ。地図・津波予報区も含め利用可能。
 - `GeoJSON_JMA_FaultDL`: 気象庁断層データ([震央分布での内部データ](https://www.jma.go.jp/bosai/hypo/const/faultDL.geojson))
+
+<!--### Drawing supports-->
 
 ## Ichihai1415.GeoJSON.Test
 
@@ -57,6 +61,14 @@ debug/test for library. If you want to use this, you must change the path.
 If you find a bug or see an improvement, please create an Issue or Pull Request, or contact me ([X @ProjectS31415_1](https://x.com/ProjectS31415_1)).
 
 ## Versions
+
+<!-- Add: Drawing supports. More will be added in the future. See `Drawing supports` above for details.-->
+
+### v1.0.3
+
+2025/06/22
+
+- Add: Some properties in `GeoJSON_JMA_Map.C_Properties_JMA_Map`.
 
 ### v1.0.2
 
@@ -71,7 +83,7 @@ If you find a bug or see an improvement, please create an Issue or Pull Request,
 2025/06/01
 
 - Fix: A problem where property contents could not be accessed when inherited. Fixed the inheritance process, so if you used inheritance in a previous version, you need to fix it.
-- Add: Inheriting sample "GeoJSON_JMA_FaultDL". See `About samples of inheriting` above for details.
+- Add: Inheriting sample "GeoJSON_JMA_FaultDL". See `Inheriting samples` above for details.
 
 ### v1.0.0
 
