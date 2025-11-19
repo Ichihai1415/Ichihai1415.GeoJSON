@@ -50,7 +50,9 @@ The samples is for Japan, so it is written here in Japanese. If garbled characte
 - `GeoJSON_JMA_Map`: 気象庁GISデータ。地図・津波予報区も含め利用可能。
 - `GeoJSON_JMA_FaultDL`: 気象庁断層データ([震央分布での内部データ](https://www.jma.go.jp/bosai/hypo/const/faultDL.geojson))
 
-<!--### Drawing supports-->
+### Drawing supports
+
+
 
 ## Ichihai1415.GeoJSON.Test
 
@@ -62,7 +64,8 @@ If you find a bug or see an improvement, please create an Issue or Pull Request,
 
 ## Versions
 
-<!-- Add: Drawing supports. More will be added in the future. See `Drawing supports` above for details.-->
+- Change: Upgraded to .NET10.0 .  
+- Add: Drawing supports. Additional items will be added in the future. See `Drawing supports` above for details.
 
 ### v1.0.3
 
