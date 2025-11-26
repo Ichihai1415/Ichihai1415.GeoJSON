@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Runtime.Versioning;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using static Ichihai1415.GeoJSON.GeoJSONScheme;
 
@@ -136,8 +139,356 @@ namespace Ichihai1415.GeoJSON
         /// </summary>
         /// <typeparam name="TValue">デシリアライズする型。</typeparam>
         /// <param name="json">JSON文字列</param>
-        /// <param name="options">JSONシリアライズのオプション(設定するなら<see cref="JsonSerializer.Deserialize{T}(string, JsonSerializerOptions?)"/>でいい)</param>
         /// <returns><typeparamref name="TValue"/>にデシリアライズされたJSON</returns>
-        public static TValue? Deserialize<TValue>(string json, JsonSerializerOptions? options = null) => JsonSerializer.Deserialize<TValue>(json, options ?? ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE);
+        public static TValue? Deserialize<TValue>(string json) => JsonSerializer.Deserialize<TValue>(json, ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE);
+
+        /// <summary>
+        /// <see cref="JsonSerializerOptions"/>に<see cref="ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE"/>を自動的に指定してJSONをデシリアライズします。
+        /// </summary>
+        /// <remarks><see cref="JsonSerializer.Deserialize{T}(string, JsonSerializerOptions?)"/>と同じです。</remarks>
+        /// <typeparam name="TValue">デシリアライズする型。</typeparam>
+        /// <param name="json">JSON文字列</param>
+        /// <param name="options">JSONシリアライズのオプション</param>
+        /// <returns><typeparamref name="TValue"/>にデシリアライズされたJSON</returns>
+        public static TValue? Deserialize<TValue>(string json, JsonSerializerOptions options) => JsonSerializer.Deserialize<TValue>(json, options);
+    }
+
+    /// <summary>
+    /// マップ描画用クラスです。
+    /// </summary>
+    public class MapDrawer
+    {
+        /// <summary>
+        /// System.Drawing.Common用
+        /// </summary>
+        [SupportedOSPlatform("windows")]
+        public class DrawingCommon
+        {
+            /// <summary>
+            /// 気象庁GISデータで地図を描画します。
+            /// </summary>
+            /// <param name="g">Encapsulates a GDI+ drawing surface.</param>
+            /// <param name="mapData">地図データ</param>
+            /// <param name="config">描画設定</param>
+            /// <exception cref="Exception"></exception>
+            public static void DrawMap(Graphics g, GeoJSON_JMA_Map mapData, DrawConfig config)
+            {
+                if (mapData == null) throw new Exception("地図データが読み込まれていません。");
+                var colorConfig = config.Colors.DeepCopy() ?? new();
+                if (colorConfig.CodeFillColors.Count == 0) Console.WriteLine("塗り替え配色データがありません。");
+                using var gp = new GraphicsPath();
+                foreach (var feature in mapData.Features)
+                {
+                    if (feature.Geometry == null) continue;
+                    foreach (var singleObject in feature.Geometry.Coordinates.Objects)
+                    {
+                        gp.StartFigure();
+                        var points = singleObject.MainPoints.Select(coordinate => new PointF((coordinate.Lon - config.LonSta) * (float)config.Zoom, (config.LatEnd - coordinate.Lat) * (float)config.Zoom));
+                        if (points.Count() > 2)
+                        {
+                            gp.AddPolygon(points.ToArray());
+                            if (colorConfig.CodeFillColors.TryGetValue(int.Parse(feature.Properties?.GetCode() == "" ? "-1" : feature.Properties?.GetCode() ?? "-1"), out var color))
+                                g.FillPolygon(new SolidBrush(color), points.ToArray());
+                            else
+                                g.FillPolygon(new SolidBrush(colorConfig.DefaultFillColor), points.ToArray());
+                        }
+                    }
+                }
+                //g.FillPath(new SolidBrush(Color.FromArgb(100, 100, 150)), gp);//単色用
+                var lineWidth = Math.Max(1f, (float)config.Zoom / 216f);
+                g.DrawPath(new Pen(colorConfig.LineColor, lineWidth) { LineJoin = LineJoin.Round }, gp);
+            }
+
+            /// <summary>
+            /// FeatureCollectionの基本クラスのデータで地図を描画します。Featureは使用しません。
+            /// </summary>
+            /// <param name="g">Encapsulates a GDI+ drawing surface.</param>
+            /// <param name="mapData">地図データ</param>
+            /// <param name="config">描画設定</param>
+            public static void DrawMap_OnlyGeometry(Graphics g, GeoJSON_Base mapData, DrawConfig config) => DrawMap_OnlyGeometry(g, [.. mapData.Features.Select(x => x.Geometry)], config);
+
+            /// <summary>
+            /// GeometryCollectionの基本クラスのデータで地図を描画します。
+            /// </summary>
+            /// <param name="g">Encapsulates a GDI+ drawing surface.</param>
+            /// <param name="mapData">地図データ</param>
+            /// <param name="config">描画設定</param>
+            public static void DrawMap_OnlyGeometry(Graphics g, GeoJSON_Base_OnlyGeometry mapData, DrawConfig config) => DrawMap_OnlyGeometry(g, mapData.Geometries, config);
+
+            /// <summary>
+            /// FeatureCollectionの基本クラスのデータで地図を描画します。
+            /// </summary>
+            /// <param name="g">Encapsulates a GDI+ drawing surface.</param>
+            /// <param name="geometries">独自Geometry配列</param>
+            /// <param name="config">描画設定</param>
+            /// <exception cref="Exception"></exception>
+            public static void DrawMap_OnlyGeometry(Graphics g, OriginalGeometry?[] geometries, DrawConfig config)
+            {
+                if (geometries == null) throw new Exception("地図データが読み込まれていません。");
+                var colorConfig = config.Colors.DeepCopy() ?? new();
+                if (colorConfig.CodeFillColors.Count > 0) Console.WriteLine("塗り替え配色データがありますが、ここでは無効です。");
+                using var gp = new GraphicsPath();
+                foreach (var geometry in geometries)
+                {
+                    if (geometry == null) continue;
+                    foreach (var singleObject in geometry.Coordinates.Objects)
+                    {
+                        gp.StartFigure();
+                        var points = singleObject.MainPoints.Select(coordinate => new PointF((coordinate.Lon - config.LonSta) * (float)config.Zoom, (config.LatEnd - coordinate.Lat) * (float)config.Zoom));
+                        if (points.Count() > 2) gp.AddPolygon(points.ToArray());
+                    }
+                }
+                g.FillPath(new SolidBrush(Color.FromArgb(100, 100, 150)), gp);//単色用
+                var lineWidth = Math.Max(1f, (float)config.Zoom / 216f);
+                g.DrawPath(new Pen(colorConfig.LineColor, lineWidth) { LineJoin = LineJoin.Round }, gp);
+            }
+        }
+
+        /// <summary>
+        /// 描画設定
+        /// </summary>
+        public class DrawConfig
+        {
+            /// <summary>
+            /// 初期化コンストラクト
+            /// </summary>
+            public DrawConfig() { }
+
+            /// <summary>
+            /// [動画用]描画開始日時
+            /// </summary>
+            public DateTime? StartTime { get; init; }
+
+            /// <summary>
+            /// [動画用]描画終了日時
+            /// </summary>
+            public DateTime? EndTime { get; init; }
+
+            /// <summary>
+            /// [動画用]描画間隔
+            /// </summary>
+            public TimeSpan? DrawSpan { get; init; }
+
+            /// <summary>
+            /// サイズ
+            /// </summary>
+            public required C_Size Size { get; init; }
+
+            /// <summary>
+            /// 緯度の始点
+            /// </summary>
+            public required float LatSta { get; init; }
+
+            /// <summary>
+            /// 緯度の終点
+            /// </summary>
+            public required float LatEnd { get; init; }
+
+            /// <summary>
+            /// 経度の始点
+            /// </summary>
+            public required float LonSta { get; init; }
+
+            /// <summary>
+            /// 経度の終点
+            /// </summary>
+            public required float LonEnd { get; init; }
+
+            /// <summary>
+            /// ズーム率
+            /// </summary>
+            //いるかわからないが再計算回避策
+            private float _zoom = -1;
+
+            /// <summary>
+            /// ズーム率
+            /// </summary>
+            public float Zoom
+            {
+                get
+                {
+                    if (_zoom == -1)
+                        _zoom = Size.Height / (LatEnd - LatSta);
+                    return _zoom;
+                }
+            }
+
+            /// <summary>
+            /// ズーム率（幅, 高さ）
+            /// </summary>
+            private (float zw, float zh) _zoomWH = (-1, -1);
+
+            /// <summary>
+            /// ズーム率（幅, 高さ）
+            /// </summary>
+            public (float zw, float zh) ZoomWH
+            {
+                get
+                {
+                    if (_zoomWH.zw == -1)
+                        _zoomWH = (Size.Width / (LonEnd - LonSta), Size.Height / (LatEnd - LatSta));
+                    return _zoomWH;
+                }
+            }
+
+            /// <summary>
+            /// サイズを取得します。
+            /// </summary>
+            /// <returns><see cref="System.Drawing.Size"/>でのサイズ</returns>
+            public Size GetDrawSize() => Size.ToDrawingSize();
+
+            /// <summary>
+            /// 配色
+            /// </summary>
+            public required C_Colors Colors { get; set; }
+
+            /// <summary>
+            /// ディープコピーします。
+            /// </summary>
+            /// <returns>ディープコピーされたオブジェクト</returns>
+            public DrawConfig DeepCopy() => new()
+            {
+                StartTime = StartTime,
+                EndTime = EndTime,
+                DrawSpan = DrawSpan,
+                Size = Size.DeepCopy(),
+                LatSta = LatSta,
+                LatEnd = LatEnd,
+                LonSta = LonSta,
+                LonEnd = LonEnd,
+                _zoom = _zoom,
+                _zoomWH = _zoomWH,
+                Colors = Colors.DeepCopy()
+            };
+
+            /// <summary>
+            /// 配色を指定しディープコピーします。
+            /// </summary>
+            /// <param name="color">配色</param>
+            /// <returns>ディープコピーされたオブジェクト</returns>
+            public DrawConfig DeepCopy(C_Colors color) => new()
+            {
+                StartTime = StartTime,
+                EndTime = EndTime,
+                DrawSpan = DrawSpan,
+                Size = Size.DeepCopy(),
+                LatSta = LatSta,
+                LatEnd = LatEnd,
+                LonSta = LonSta,
+                LonEnd = LonEnd,
+                _zoom = _zoom,
+                _zoomWH = _zoomWH,
+                Colors = color
+            };
+
+            /// <summary>
+            /// サイズ
+            /// </summary>
+            public class C_Size
+            {
+                /// <summary>
+                /// 初期化コンストラクト（高さ指定、16:9）
+                /// </summary>
+                /// <param name="height">高さ</param>
+                public C_Size(int height)
+                {
+                    Width = height * 16 / 9;
+                    Height = height;
+                }
+
+                /// <summary>
+                /// 初期化コンストラクト（高さ、比率指定）
+                /// </summary>
+                /// <param name="height">高さ</param>
+                /// <param name="ratio">比率（幅/高さ）</param>
+                public C_Size(int height, double ratio)
+                {
+                    Width = (int)(height * ratio);
+                    Height = height;
+                }
+
+                /// <summary>
+                /// 初期化コンストラクト
+                /// </summary>
+                /// <param name="height">高さ</param>
+                /// <param name="ratio">比（幅, 高さ）</param>
+                public C_Size(int height, (int rw, int rh) ratio)
+                {
+                    Width = height * ratio.rw / ratio.rh;
+                    Height = height;
+                }
+
+                /// <summary>
+                /// 初期化コンストラクト（幅、高さ指定）
+                /// </summary>
+                /// <param name="width">幅</param>
+                /// <param name="height">高さ</param>
+                public C_Size(int width, int height)
+                {
+                    Width = width;
+                    Height = height;
+                }
+
+                /// <summary>
+                /// 幅
+                /// </summary>
+                public int Width { get; }
+
+                /// <summary>
+                /// 高さ
+                /// </summary>
+                public int Height { get; }
+
+                /// <summary>
+                /// サイズを取得します。
+                /// </summary>
+                /// <returns><see cref="System.Drawing.Size"/>でのサイズ</returns>
+                public Size ToDrawingSize() => new(Width, Height);
+
+                /// <summary>
+                /// ディープコピーします。
+                /// </summary>
+                /// <returns>ディープコピーされたオブジェクト</returns>
+                public C_Size DeepCopy() => new(Width, Height);
+            }
+
+            /// <summary>
+            /// 配色
+            /// </summary>
+            public class C_Colors
+            {
+                /// <summary>
+                /// 境界線色
+                /// </summary>
+                public Color LineColor { get; init; } = Color.White;
+
+                /// <summary>
+                /// 背景色
+                /// </summary>
+                public Color BackgroundColor { get; init; } = Color.FromArgb(20, 40, 60);
+
+                /// <summary>
+                /// 通常塗りつぶし色
+                /// </summary>
+                public Color DefaultFillColor { get; init; } = Color.FromArgb(100, 100, 150);
+
+                /// <summary>
+                /// コードと塗りつぶし色のペア
+                /// </summary>
+                public Dictionary<int, Color> CodeFillColors { get; set; } = [];
+
+                /// <summary>
+                /// ディープコピーします。
+                /// </summary>
+                /// <returns>ディープコピーされたオブジェクト</returns>
+                public C_Colors DeepCopy() => new()
+                {
+                    LineColor = LineColor,
+                    BackgroundColor = BackgroundColor,
+                    DefaultFillColor = DefaultFillColor,
+                    CodeFillColors = CodeFillColors.ToDictionary(x => x.Key, x => x.Value)//SolidBrushのDeepCopy怪しいけど保留//こっちではColorに変更
+                };
+            }
+        }
     }
 }
