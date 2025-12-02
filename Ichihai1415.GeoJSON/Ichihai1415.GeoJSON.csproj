@@ -8,7 +8,7 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>$(AssemblyName)</Title>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<Authors>Ichihai1415</Authors>
 		<Description>GeoJSON read support library for map drawing, etc.</Description>
 		<Copyright>© 2025 Ichihai1415</Copyright>
@@ -45,7 +45,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
+		<PackageReference Include="System.Drawing.Common" Version="10.0.0" />
 	</ItemGroup>
 
 </Project>

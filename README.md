@@ -9,7 +9,7 @@
 
 GeoJSON read support library for map drawing, etc.
 
-This library is provided only in `.NET9`.
+This library is provided only in `.NET10`.
 
 > [!NOTE]
 > code comments are written in Japanese. I used DeepL partially in this README.
@@ -52,20 +52,31 @@ The samples is for Japan, so it is written here in Japanese. If garbled characte
 
 ### Drawing supports
 
+Now only supports `System.Drawing.Common`. More drawing methods(using another library) will be added in the future.
+
+For drawing, need drawing config(`MapDrawer.DrawConfig`).
+
+ - `MapDrawer.Drawing_Common`: use `System.Drawing.Common`.
+	- `DrawMap`: Drawing for `GeoJSON_JMA_Map`(気象庁GISデータ).
+	- `DrawMap_OnlyGeometry`: Drawing for `GeoJSON_Base`, `GeoJSON_Base_OnlyGeometry`, `OriginalGeometry?[]`.
 
 
 ## Ichihai1415.GeoJSON.Test
 
-debug/test for library. If you want to use this, you must change the path.
+Debug/Test for library. If you want to use this, you must change the path.
 
 ## Contribution
 
-If you find a bug or see an improvement, please create an Issue or Pull Request, or contact me ([X @ProjectS31415_1](https://x.com/ProjectS31415_1)).
+If you find any bug or improvement, please create an Issue or Pull Request, or contact me ([X @ProjectS31415_1](https://x.com/ProjectS31415_1)).
 
 ## Versions
 
-- Change: Upgraded to .NET10.0 .  
-- Add: Drawing supports. Additional items will be added in the future. See `Drawing supports` above for details.
+### v1.0.4
+
+2025/12/02
+
+- Change: Upgraded to .NET10 .
+- Add: Drawing supports. See `Drawing supports` above for details.
 
 ### v1.0.3
 
