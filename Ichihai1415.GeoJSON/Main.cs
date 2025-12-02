@@ -162,7 +162,7 @@ namespace Ichihai1415.GeoJSON
         /// System.Drawing.Common用
         /// </summary>
         [SupportedOSPlatform("windows")]
-        public class DrawingCommon
+        public class Drawing_Common
         {
             /// <summary>
             /// 気象庁GISデータで地図を描画します。
@@ -175,7 +175,7 @@ namespace Ichihai1415.GeoJSON
             {
                 if (mapData == null) throw new Exception("地図データが読み込まれていません。");
                 var colorConfig = config.Colors.DeepCopy() ?? new();
-                if (colorConfig.CodeFillColors.Count == 0) Console.WriteLine("塗り替え配色データがありません。");
+                if (colorConfig.CodeFillColors.Count == 0) Console.WriteLine("[Ichihai1415.GeoJSON] 塗り替え配色データがありません。");
                 using var gp = new GraphicsPath();
                 foreach (var feature in mapData.Features)
                 {
@@ -183,7 +183,7 @@ namespace Ichihai1415.GeoJSON
                     foreach (var singleObject in feature.Geometry.Coordinates.Objects)
                     {
                         gp.StartFigure();
-                        var points = singleObject.MainPoints.Select(coordinate => new PointF((coordinate.Lon - config.LonSta) * (float)config.Zoom, (config.LatEnd - coordinate.Lat) * (float)config.Zoom));
+                        var points = singleObject.MainPoints.Select(coordinate => new PointF((coordinate.Lon - config.LonSta) * config.Zoom.zw, (config.LatEnd - coordinate.Lat) * config.Zoom.zh));
                         if (points.Count() > 2)
                         {
                             gp.AddPolygon(points.ToArray());
@@ -195,7 +195,7 @@ namespace Ichihai1415.GeoJSON
                     }
                 }
                 //g.FillPath(new SolidBrush(Color.FromArgb(100, 100, 150)), gp);//単色用
-                var lineWidth = Math.Max(1f, (float)config.Zoom / 216f);
+                var lineWidth = Math.Max(1f, Math.Min(config.Zoom.zw, config.Zoom.zh) / 216f);
                 g.DrawPath(new Pen(colorConfig.LineColor, lineWidth) { LineJoin = LineJoin.Round }, gp);
             }
 
@@ -226,7 +226,7 @@ namespace Ichihai1415.GeoJSON
             {
                 if (geometries == null) throw new Exception("地図データが読み込まれていません。");
                 var colorConfig = config.Colors.DeepCopy() ?? new();
-                if (colorConfig.CodeFillColors.Count > 0) Console.WriteLine("塗り替え配色データがありますが、ここでは無効です。");
+                if (colorConfig.CodeFillColors.Count > 0) Console.WriteLine("[Ichihai1415.GeoJSON] 塗り替え配色データがありますが、ここでは無効です。");
                 using var gp = new GraphicsPath();
                 foreach (var geometry in geometries)
                 {
@@ -234,12 +234,12 @@ namespace Ichihai1415.GeoJSON
                     foreach (var singleObject in geometry.Coordinates.Objects)
                     {
                         gp.StartFigure();
-                        var points = singleObject.MainPoints.Select(coordinate => new PointF((coordinate.Lon - config.LonSta) * (float)config.Zoom, (config.LatEnd - coordinate.Lat) * (float)config.Zoom));
+                        var points = singleObject.MainPoints.Select(coordinate => new PointF((coordinate.Lon - config.LonSta) * config.Zoom.zw, (config.LatEnd - coordinate.Lat) * config.Zoom.zh));
                         if (points.Count() > 2) gp.AddPolygon(points.ToArray());
                     }
                 }
                 g.FillPath(new SolidBrush(Color.FromArgb(100, 100, 150)), gp);//単色用
-                var lineWidth = Math.Max(1f, (float)config.Zoom / 216f);
+                var lineWidth = Math.Max(1f, Math.Min(config.Zoom.zw, config.Zoom.zh) / 216f);
                 g.DrawPath(new Pen(colorConfig.LineColor, lineWidth) { LineJoin = LineJoin.Round }, gp);
             }
         }
@@ -255,24 +255,9 @@ namespace Ichihai1415.GeoJSON
             public DrawConfig() { }
 
             /// <summary>
-            /// [動画用]描画開始日時
+            /// マップ部分サイズ
             /// </summary>
-            public DateTime? StartTime { get; init; }
-
-            /// <summary>
-            /// [動画用]描画終了日時
-            /// </summary>
-            public DateTime? EndTime { get; init; }
-
-            /// <summary>
-            /// [動画用]描画間隔
-            /// </summary>
-            public TimeSpan? DrawSpan { get; init; }
-
-            /// <summary>
-            /// サイズ
-            /// </summary>
-            public required C_Size Size { get; init; }
+            public required C_Size Size_Map { get; init; }
 
             /// <summary>
             /// 緯度の始点
@@ -295,47 +280,22 @@ namespace Ichihai1415.GeoJSON
             public required float LonEnd { get; init; }
 
             /// <summary>
-            /// ズーム率
+            /// ズーム率（幅, 高さ）
             /// </summary>
-            //いるかわからないが再計算回避策
-            private float _zoom = -1;
+            private (float zw, float zh) _zoom = (-1, -1);//再計算しないよう(効果不明)
 
             /// <summary>
-            /// ズーム率
+            /// ズーム率（幅, 高さ）
             /// </summary>
-            public float Zoom
+            public (float zw, float zh) Zoom
             {
                 get
                 {
-                    if (_zoom == -1)
-                        _zoom = Size.Height / (LatEnd - LatSta);
+                    if (_zoom.zw == -1)
+                        _zoom = (Size_Map.Width / (LonEnd - LonSta), Size_Map.Height / (LatEnd - LatSta));
                     return _zoom;
                 }
             }
-
-            /// <summary>
-            /// ズーム率（幅, 高さ）
-            /// </summary>
-            private (float zw, float zh) _zoomWH = (-1, -1);
-
-            /// <summary>
-            /// ズーム率（幅, 高さ）
-            /// </summary>
-            public (float zw, float zh) ZoomWH
-            {
-                get
-                {
-                    if (_zoomWH.zw == -1)
-                        _zoomWH = (Size.Width / (LonEnd - LonSta), Size.Height / (LatEnd - LatSta));
-                    return _zoomWH;
-                }
-            }
-
-            /// <summary>
-            /// サイズを取得します。
-            /// </summary>
-            /// <returns><see cref="System.Drawing.Size"/>でのサイズ</returns>
-            public Size GetDrawSize() => Size.ToDrawingSize();
 
             /// <summary>
             /// 配色
@@ -346,20 +306,7 @@ namespace Ichihai1415.GeoJSON
             /// ディープコピーします。
             /// </summary>
             /// <returns>ディープコピーされたオブジェクト</returns>
-            public DrawConfig DeepCopy() => new()
-            {
-                StartTime = StartTime,
-                EndTime = EndTime,
-                DrawSpan = DrawSpan,
-                Size = Size.DeepCopy(),
-                LatSta = LatSta,
-                LatEnd = LatEnd,
-                LonSta = LonSta,
-                LonEnd = LonEnd,
-                _zoom = _zoom,
-                _zoomWH = _zoomWH,
-                Colors = Colors.DeepCopy()
-            };
+            public DrawConfig DeepCopy() => DeepCopy(Colors.DeepCopy());
 
             /// <summary>
             /// 配色を指定しディープコピーします。
@@ -368,16 +315,12 @@ namespace Ichihai1415.GeoJSON
             /// <returns>ディープコピーされたオブジェクト</returns>
             public DrawConfig DeepCopy(C_Colors color) => new()
             {
-                StartTime = StartTime,
-                EndTime = EndTime,
-                DrawSpan = DrawSpan,
-                Size = Size.DeepCopy(),
+                Size_Map = Size_Map.DeepCopy(),
                 LatSta = LatSta,
                 LatEnd = LatEnd,
                 LonSta = LonSta,
                 LonEnd = LonEnd,
                 _zoom = _zoom,
-                _zoomWH = _zoomWH,
                 Colors = color
             };
 
@@ -463,11 +406,6 @@ namespace Ichihai1415.GeoJSON
                 public Color LineColor { get; init; } = Color.White;
 
                 /// <summary>
-                /// 背景色
-                /// </summary>
-                public Color BackgroundColor { get; init; } = Color.FromArgb(20, 40, 60);
-
-                /// <summary>
                 /// 通常塗りつぶし色
                 /// </summary>
                 public Color DefaultFillColor { get; init; } = Color.FromArgb(100, 100, 150);
@@ -484,9 +422,8 @@ namespace Ichihai1415.GeoJSON
                 public C_Colors DeepCopy() => new()
                 {
                     LineColor = LineColor,
-                    BackgroundColor = BackgroundColor,
                     DefaultFillColor = DefaultFillColor,
-                    CodeFillColors = CodeFillColors.ToDictionary(x => x.Key, x => x.Value)//SolidBrushのDeepCopy怪しいけど保留//こっちではColorに変更
+                    CodeFillColors = CodeFillColors.ToDictionary(x => x.Key, x => x.Value)
                 };
             }
         }

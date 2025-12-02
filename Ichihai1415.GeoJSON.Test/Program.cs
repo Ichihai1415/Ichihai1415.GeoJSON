@@ -31,11 +31,11 @@
             Console.WriteLine();*/
 
             var dt_init = DateTime.Now;
-            List<GeoJSONScheme.GeoJSON_JMA_Map> jsonList = new();
+            List<GeoJSONScheme.GeoJSON_JMA_Map> jsonList = [];
             foreach (var file in Directory.GetFiles("D:\\Ichihai1415\\data\\map\\JMA\\geojson", "*.geojson", SearchOption.TopDirectoryOnly))
             {
                 var dt = DateTime.Now;
-                var json = GeoJSONHelper.Deserialize<GeoJSONScheme.GeoJSON_JMA_Map>(File.ReadAllText(file));
+                var json = GeoJSONHelper.Deserialize<GeoJSONScheme.GeoJSON_JMA_Map>(File.ReadAllText(file))!;
                 jsonList.Add(json);
                 Console.WriteLine(file + "  ok  time: " + (DateTime.Now - dt).TotalMilliseconds + "ms  memory:" + GC.GetTotalMemory(true) / 1024f / 1024f + "MB");
             }
