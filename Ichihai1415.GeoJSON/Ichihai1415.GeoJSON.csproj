@@ -18,7 +18,9 @@
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<PackageReleaseNotes>- Add: Some properties in `GeoJSON_JMA_Map.C_Properties_JMA_Map`.</PackageReleaseNotes>
+		<PackageReleaseNotes>- Change: Upgraded to .NET10 .
+- Add: Drawing supports.</PackageReleaseNotes>
+		<PackageIcon>new_lib.png</PackageIcon>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -46,6 +48,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="System.Drawing.Common" Version="10.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="new_lib.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 </Project>
