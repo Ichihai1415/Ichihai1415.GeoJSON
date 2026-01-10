@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Ichihai1415.GeoJSON": {
+      "commandName": "Project"
+    },
+    "プロファイル 1": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Ichihai1415\\source\\vs\\Ichihai1415.GeoJSON\\Ichihai1415.GeoJSON.Test\\bin\\Debug\\net10.0\\Ichihai1415.GeoJSON.Test.exe"
+    }
+  }
+}

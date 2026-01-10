@@ -12,7 +12,7 @@ GeoJSON read support library for map drawing, etc.
 This library is provided only in `.NET10`.
 
 > [!NOTE]
-> code comments are written in Japanese. I used DeepL partially in this README.
+> code comments and exception messages are written in Japanese. I used DeepL partially in this README.
 
 ## Installation
 
@@ -45,10 +45,15 @@ public static readonly JsonSerializerOptions ORIGINAL_GEOMETRY_SERIALIZER_OPTION
 
 ### Inheriting samples
 
-The samples is for Japan, so it is written here in Japanese. If garbled characters are occurring, please look at GitHub, etc.
+The samples is for Japan, so it is written here in Japanese. 
+If garbled characters are occurring, please look at GitHub, etc.
 
 - `GeoJSON_JMA_Map`: 気象庁GISデータ。地図・津波予報区も含め利用可能。
 - `GeoJSON_JMA_FaultDL`: 気象庁断層データ([震央分布での内部データ](https://www.jma.go.jp/bosai/hypo/const/faultDL.geojson))
+
+以下は他のレポジトリにあります。
+
+- `GeoJSON_KFJ`（[Ichihai1415/RailroadsViewer](https://github.com/Ichihai1415/RailroadsViewer)）: 国土数値情報（主に鉄道データ）。このライブラリに入れるかは未定。
 
 ### Drawing supports
 
@@ -70,6 +75,12 @@ Debug/Test for library. If you want to use this, you must change the path.
 If you find any bug or improvement, please create an Issue or Pull Request, or contact me ([X @ProjectS31415_1](https://x.com/ProjectS31415_1)).
 
 ## Versions
+
+### v1.0.5
+
+2026/01/10
+
+- Add: Support to load `Point` and `MultiPoint` types (drawing is not yet).
 
 ### v1.0.4
 
