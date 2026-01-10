@@ -40,12 +40,15 @@ namespace Ichihai1415.GeoJSON
             /// オブジェクトから各座標を取得します。
             /// </summary>
             /// <param name="singleObject">1つのオブジェクト(<c>[[x1,y1],[x2,y2,], ...]</c>)</param>
+            /// <param name="isPoint">Point/MultiPointの場合true</param>
             /// <returns>座標の配列</returns>
             /// <exception cref="JsonException">変換に失敗したとき</exception>
-            private static OriginalGeometry.Point[] GetPoints(JsonElement singleObject)
+            private static OriginalGeometry.Point[] GetPoints(JsonElement singleObject, bool isPoint = false)
             {
                 var pointsList = new List<OriginalGeometry.Point>();
-                foreach (var point in singleObject.EnumerateArray())
+
+                var singleObjs = isPoint ? [singleObject] : singleObject.EnumerateArray().ToArray();
+                foreach (var point in singleObjs)
                 {
                     if (point.GetArrayLength() == 2)
                     {
@@ -63,31 +66,28 @@ namespace Ichihai1415.GeoJSON
             /// coordinatesを<see cref="OriginalGeometry"/>に変換します。
             /// </summary>
             /// <param name="coordinates">coordinatesのジャグ配列(<see cref="JsonElement"/>)をそのまま</param>
-            /// <param name="type">種類(<c>Polygon</c>/<c>MultiPolygon</c>/<c>LineString</c>/<c>MultiLineString</c>) ※指定ミス注意</param>
+            /// <param name="type">種類(<c>Polygon</c>/<c>MultiPolygon</c>/<c>LineString</c>/<c>MultiLineString</c>/<c>Point</c>/<c>MultiPoint</c>) ※指定ミス注意</param>
             /// <returns>変換された値</returns>
             /// <exception cref="JsonException">変換に失敗したとき</exception>
-            private static OriginalGeometry Coordinates2OriginalGeometry(JsonElement coordinates, string type)
+            private static OriginalGeometry Coordinates2OriginalGeometry(JsonElement coordinates, string type) => type switch
             {
-                if (type == "Polygon" || type == "LineString")
-                    return Coordinates2OriginalGeometry([coordinates], type);
-                else if (type == "MultiPolygon" || type == "MultiLineString")
-                    return Coordinates2OriginalGeometry([.. coordinates.EnumerateArray()], type);
-                else
-                    throw new JsonException("JSONの解析に失敗しました。", new Exception("typeが不正です。"));
-            }
+                "Polygon" or "LineString" or "Point" => Coordinates2OriginalGeometry([coordinates], type),
+                "MultiPolygon" or "MultiLineString" or "MultiPoint" => Coordinates2OriginalGeometry([.. coordinates.EnumerateArray()], type),
+                _ => throw new JsonException("JSONの解析に失敗しました。", new Exception("typeが不正です。")),
+            };
 
             /// <summary>
             /// coordinatesを<see cref="OriginalGeometry"/>に変換します。
             /// </summary>
             /// <remarks>通常は<see cref="Coordinates2OriginalGeometry(JsonElement, string)"/>を利用してください。</remarks>
             /// <param name="coordinatesList">coordinatesのジャグ配列をリスト化したもの(<see cref="Coordinates2OriginalGeometry(JsonElement, string)"/>を参照)</param>
-            /// <param name="type">種類(<c>Polygon</c>/<c>MultiPolygon</c>/<c>LineString</c>/<c>MultiLineString</c>) ※指定ミス注意</param>
+            /// <param name="type">種類(<c>Polygon</c>/<c>MultiPolygon</c>/<c>LineString</c>/<c>MultiLineString</c>/<c>Point</c>/<c>MultiPoint</c>) ※指定ミス注意</param>
             /// <returns>変換された値</returns>
             /// <exception cref="JsonException">変換に失敗したとき</exception>
             private static OriginalGeometry Coordinates2OriginalGeometry(JsonElement[] coordinatesList, string type)
             {
-                if (type != "Polygon" && type != "MultiPolygon" && type != "LineString" && type != "MultiLineString")
-                    throw new JsonException("JSONの解析に失敗しました。", new Exception("typeが不正です。"));
+                //if (type != "Polygon" && type != "MultiPolygon" && type != "LineString" && type != "MultiLineString" && type != "Point" && type != "MultiPoint")
+                //    throw new JsonException("JSONの解析に失敗しました。", new Exception("typeが不正です。"));
                 var polygonsPointsList = new List<List<OriginalGeometry.Point[]>>();
                 foreach (var coordinates in coordinatesList)
                 {
@@ -102,11 +102,11 @@ namespace Ichihai1415.GeoJSON
                             var points = GetPoints(element_pts);
                             polygonsPoints.Add(points);
                         }
-                    else//LineString/MultiLineString
+                    else
                     {
                         if (coordinates.ValueKind != JsonValueKind.Array)
                             throw new JsonException("JSONの解析に失敗しました。", new Exception("構造が想定外です。"));
-                        var points = GetPoints(coordinates);
+                        var points = GetPoints(coordinates, type == "Point" || type == "MultiPoint");
                         polygonsPoints.Add(points);
                     }
                     polygonsPointsList.Add(polygonsPoints);

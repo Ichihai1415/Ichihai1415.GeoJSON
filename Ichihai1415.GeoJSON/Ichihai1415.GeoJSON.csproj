@@ -8,7 +8,7 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>$(AssemblyName)</Title>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<Authors>Ichihai1415</Authors>
 		<Description>GeoJSON read support library for map drawing, etc.</Description>
 		<Copyright>© 2025 Ichihai1415</Copyright>
@@ -18,8 +18,7 @@
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<PackageReleaseNotes>- Change: Upgraded to .NET10 .
-- Add: Drawing supports.</PackageReleaseNotes>
+		<PackageReleaseNotes>- Add: Support to load `Point` and `MultiPoint` types (drawing is not yet).</PackageReleaseNotes>
 		<PackageIcon>new_lib.png</PackageIcon>
 	</PropertyGroup>
 

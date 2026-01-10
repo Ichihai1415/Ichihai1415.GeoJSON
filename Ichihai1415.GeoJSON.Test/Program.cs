@@ -1,9 +1,17 @@
-﻿namespace Ichihai1415.GeoJSON.Test
+﻿using System.Text.Json;
+
+namespace Ichihai1415.GeoJSON.Test
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+
+            var json_t = GeoJSONHelper.Deserialize<GeoJSONScheme.GeoJSON_Base>(File.ReadAllText(@"C:\Ichihai1415\source\vs\RailroadsViewer\RailroadsViewer\bin\Debug\net10.0-windows\data\N05-24_Station2.geojson"));
+            var json_t2 = GeoJSONHelper.Deserialize<GeoJSONScheme.GeoJSON_Base>("{\r\n  \"type\": \"FeatureCollection\",\r\n  \"features\": [\r\n    {\r\n      \"type\": \"Feature\",\r\n      \"geometry\": {\r\n        \"type\": \"MultiPoint\",\r\n        \"coordinates\": [\r\n          [136.6562, 36.5680],\r\n          [136.6778, 36.5715]\r\n        ]\r\n      },\r\n      \"properties\": {\r\n        \"name\": \"Point Group 1\"\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"Feature\",\r\n      \"geometry\": {\r\n        \"type\": \"MultiPoint\",\r\n        \"coordinates\": [\r\n          [136.6425, 36.5560],\r\n          [136.6500, 36.5600]\r\n        ]\r\n      },\r\n      \"properties\": {\r\n        \"name\": \"Point Group 2\"\r\n      }\r\n    }\r\n  ]\r\n}");
+            Console.WriteLine();
+            return;
+
             /*
             var json_init = JsonSerializer.Deserialize<GeoJSONScheme.GeoJSON_Base>(File.ReadAllText(@"D:\Ichihai1415\data\map\JMA\geojson\AreaForecastLocalE_GIS_20190125_01.geojson"), GeoJSONHelper.ORIGINAL_GEOMETRY_SERIALIZER_OPTIONS_SAMPLE);
 
